@@ -36,12 +36,16 @@
 
          animate();
 
+         function drawScore(ctx, x, y, info)
+         {
+            ctx.font = "20px Consolas";
+            ctx.fillText(info, x, y);
+         }
+
          function animate() {
             player.move();
             track.adjustFor(player);
-            if (!track.contains(player)) {
-               return;
-            }
+            track.contains(player);
 
             ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
@@ -55,7 +59,11 @@
             player.draw(ctx);
 
             ctx.restore();
+            drawScore(ctx, 15, 20, "Points: " + track.score);
+            drawScore(ctx, 15, 40, "Speed: " + player.speed);
 
+            if (player.collision) return;
+            
             requestAnimationFrame(animate);
          }
 

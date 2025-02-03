@@ -1,26 +1,31 @@
 class Rectangle {
-   constructor(x, y, width, height) {
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-   }
+    constructor(x, y, width, height) {
+       this.x = x;
+       this.y = y;
+       this.width = width;
+       this.height = height;
+       this.newScore = false;
+       this.limitW = width + x;
+       this.limitH = height + y;
+    }
 
-   contains(player) {
-      const left = this.x + player.radius;
-      const right = this.x + this.width - player.radius;
-      const top = this.y + player.radius;
-      const bottom = this.y + this.height - player.radius;
-      return (
-         player.x >= left &&
-         player.x <= right &&
-         player.y >= top &&
-         player.y <= bottom
-      );
-   }
+    isScore(player)
+    {
+        return (this.newScore ? false : (this.width > this.height ? this.newScore = (player.x > this.limitW + player.radius) : this.newScore = (player.y > this.limitH + player.radius)));
+    }
+    
+    contains(player) {
+        const dif = Math.min(this.width, this.height);
+        const px = this.x + player.radius;
+        const py = this.y + player.radius;
+        const pw = px + this.width + (this.width > this.height ? dif : 0) - (player.radius * 2);
+        const ph = py + this.height + (this.width > this.height ? 0 : dif) - (player.radius * 2);
 
-   draw(ctx) {
-      ctx.fillStyle = "blue";
-      ctx.fillRect(this.x, this.y, this.width, this.height);
-   }
+        return (player.x >= px && player.y >= py && player.x <= pw && player.y <= ph);
+    }
+    
+    draw(ctx) {   
+        ctx.fillStyle = "blue";
+        ctx.fillRect(this.x, this.y, this.width + (this.width > this.height ? 1 : 0), this.height + (this.width > this.height ? 0 : 1));
+    }
 }
